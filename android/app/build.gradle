@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "br.com.lucolimac.formmp1"
+    namespace "br.com.lucolimac.form_mp1"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
