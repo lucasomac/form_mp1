@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class FieldEntry extends StatelessWidget {
   final String nameField;
+  final TextEditingController controller;
+  final String? Function(String?)? validate;
+  final TextInputType inputType;
 
-  const FieldEntry(this.nameField, {super.key});
+  const FieldEntry(this.nameField,
+      {super.key,
+      required this.controller,
+      this.validate,
+      this.inputType = TextInputType.text});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +30,8 @@ class FieldEntry extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: TextFormField(
+              controller: controller,
+              validator: validate,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 hintText: 'Digite o $nameField',

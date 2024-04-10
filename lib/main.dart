@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const Home(
+      home: Home(
         title: 'Exercício Montagem GUI',
       ),
     );
