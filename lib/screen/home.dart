@@ -2,14 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:form_mp1/components/button_form.dart';
 import 'package:form_mp1/components/field_entry.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final String title;
+
+  const Home({super.key, required this.title});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController addressController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
-  Home({super.key, required this.title});
+  AnimationController? _animationController;
+
+  Animation<double>? _animationFade;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _animationFade = Tween<double>(
+      begin: 50,
+      end: 0,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController!,
+        curve: Curves.ease,
+      ),
+    );
+    _animationController?.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
+  }
 
   _onSavePressed(BuildContext context) {
     bool? isValid = _formKey.currentState?.validate();
@@ -23,12 +61,15 @@ class Home extends StatelessWidget {
             title: const Text("Sucesso"),
             // Retrieve the text that the user has entered by using the
             // TextEditingController.
-            content: Column(
-              children: [
-                Text(nameController.text),
-                Text(emailController.text),
-                Text(addressController.text),
-              ],
+            content: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: Column(
+                children: [
+                  Text(nameController.text),
+                  Text(emailController.text),
+                  Text(addressController.text),
+                ],
+              ),
             ),
           );
         },
@@ -102,64 +143,70 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
-      body: Container(
-        margin: const EdgeInsets.only(left: 16, right: 16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'TELA DE CADASTRO',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              FieldEntry(
-                'nome',
-                controller: nameController,
-                inputType: TextInputType.name,
-                validate: _validateName,
-              ),
-              FieldEntry(
-                'endereço',
-                controller: addressController,
-                validate: _validateAddress,
-              ),
-              FieldEntry(
-                'email',
-                controller: emailController,
-                inputType: TextInputType.emailAddress,
-                validate: _validateEmail,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: AnimatedBuilder(
+          animation: _animationFade!,
+          builder: (context, widget) {
+            return Container(
+              margin: const EdgeInsets.only(left: 16, right: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ButtonForm(
-                      label: 'Cancelar',
-                      onPressed: () {
-                        _onCancelPressed(context);
-                      },
+                    const Text(
+                      'TELA DE CADASTRO',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    ButtonForm(
-                      label: 'Salvar',
-                      onPressed: () {
-                        _onSavePressed(context);
-                      },
+                    FieldEntry(
+                      'nome',
+                      controller: nameController,
+                      inputType: TextInputType.name,
+                      validate: _validateName,
                     ),
+                    FieldEntry(
+                      'endereço',
+                      controller: addressController,
+                      validate: _validateAddress,
+                    ),
+                    FieldEntry(
+                      'email',
+                      controller: emailController,
+                      inputType: TextInputType.emailAddress,
+                      validate: _validateEmail,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ButtonForm(
+                            label: 'Cancelar',
+                            onPressed: () {
+                              _onCancelPressed(context);
+                            },
+                          ),
+                          const SizedBox(width: 16),
+                          ButtonForm(
+                            label: 'Salvar',
+                            onPressed: () {
+                              _onSavePressed(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 }
+
+// Reference for animations --> https://flutterawesome.com/login-screen-that-uses-flutter-animations/

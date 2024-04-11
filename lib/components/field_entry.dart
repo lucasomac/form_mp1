@@ -6,11 +6,13 @@ class FieldEntry extends StatelessWidget {
   final String? Function(String?)? validate;
   final TextInputType inputType;
 
-  const FieldEntry(this.nameField,
-      {super.key,
-      required this.controller,
-      this.validate,
-      this.inputType = TextInputType.text});
+  const FieldEntry(
+    this.nameField, {
+    super.key,
+    required this.controller,
+    this.validate,
+    this.inputType = TextInputType.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +35,15 @@ class FieldEntry extends StatelessWidget {
               controller: controller,
               validator: validate,
               decoration: InputDecoration(
-                border: const OutlineInputBorder(),
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                      // color:
+                      //     ? Colors.grey
+                      //     : Colors.red,
+                      ),
+                ),
                 hintText: 'Digite o $nameField',
               ),
-              textCapitalization: TextCapitalization.sentences,
             ),
           ),
         ],
